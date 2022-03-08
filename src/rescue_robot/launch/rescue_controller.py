@@ -29,15 +29,111 @@ def generate_launch_description():
             'launch',
             'plansys2_bringup_launch_monolithic.py')),
         launch_arguments={
-          'model_file': example_dir + '/pddl/Background_Domain.pddl:' +
-                        example_dir + '/pddl/ObjHandling_Domain.pddl',
+          'model_file': example_dir + '/pddl/ObjHandling_Domain.pddl',
+                        
           'namespace': namespace
           }.items())
 
     # Specify the actions for robot_1
     
     # Specify the actions
+
+    battery_charge_1_cmd = Node(
+        package='rescue_robot',
+        executable ='battery_charge_1_action_node',
+        name ='battery_charge_1_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[
+            {
+                'specialized_arguments': ["p6building","robot_1"]
+            }
+        ])
+
+    charger_approach_cmd = Node(
+        package='rescue_robot',
+        executable ='charger_approach_action_node',
+        name ='charger_approach_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[
+            {
+                'specialized_arguments': ["p6building","robot_1"]
+            }
+        ])
+
+    item_move_cmd = Node(
+        package='rescue_robot',
+        executable ='item_move_action_node',
+        name ='item_move_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[
+            {
+                'specialized_arguments': ["p6building","robot_1"]
+            }
+        ])
     
+    item_victim_drop_cmd = Node(
+        package='rescue_robot',
+        executable ='item_victim_drop_action_node',
+        name ='item_victim_drop_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[
+            {
+                'specialized_arguments': ["p6building","robot_1"]
+            }
+        ])
+
+    item_victim_grab_cmd = Node(
+        package='rescue_robot',
+        executable ='item_victim_grab_action_node',
+        name ='item_victim_grab_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[
+            {
+                'specialized_arguments': ["p6building","robot_1"]
+            }
+        ])
+
+    obj_approach_cmd = Node(
+        package='rescue_robot',
+        executable ='obj_approach_action_node',
+        name ='obj_approach_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[
+            {
+                'specialized_arguments': ["p6building","robot_1"]
+            }
+        ])
+
+    target_approach_cmd = Node(
+        package='rescue_robot',
+        executable ='target_approach_action_node',
+        name ='target_approach_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[
+            {
+                'specialized_arguments': ["p6building","robot_1"]
+            }
+        ])
+
+    victim_rescue_cmd = Node(
+        package='rescue_robot',
+        executable ='victim_rescue_action_node',
+        name ='victim_rescue_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[
+            {
+                'specialized_arguments': ["p6building","robot_1"]
+            }
+        ])
+
     ld = LaunchDescription()
 
     # Set environment variables
@@ -47,5 +143,16 @@ def generate_launch_description():
     # Declare the launch options
     ld.add_action(plansys2_cmd)
 
+    ld.add_action(battery_charge_1_cmd)
+    ld.add_action(charger_approach_cmd)
 
+    ld.add_action(item_move_cmd)
+    ld.add_action(item_victim_drop_cmd)
+
+    ld.add_action(item_victim_grab_cmd)
+    ld.add_action(obj_approach_cmd)
+
+    ld.add_action(target_approach_cmd)
+    ld.add_action(victim_rescue_cmd)
+ 
     return ld

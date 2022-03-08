@@ -7,19 +7,19 @@
     ;====================================================
     ;==================================================== 
     (domain DDR_objHandling)
-     (:requirements 
-         :typing 
-         :negative-preconditions
-         :fluents
-         :durative-actions
-     )
+    (:requirements 
+        :typing 
+        :negative-preconditions
+        :fluents
+        :durative-actions
+    )
     ;====================================================
     ;====================================================
 
     (:types
-         world robot obj - object
-            item_victim pipes           - obj
-                balls boxes victims     - item_victim
+        world robot obj - object
+            item_victim pipe           - obj
+                ball box victim        - item_victim
     )
     ;====================================================
     ;====================================================
@@ -30,10 +30,10 @@
         (item_moved ?r - robot ?iv - item_victim)
         (victim_rescued ?r - robot ?v - victim)
             (item_victim_grabbed ?r - robot ?iv - item_victim)
-            (item_victim_target_approached ?r - robot ?iv - item_victim)
+            (item_victim_target_approuched ?r - robot ?iv - item_victim)
             (item_victim_dropped ?r - robot ?iv - item_victim)
         
-            (charger_approached ?r - robot)
+        (charger_approached ?r - robot)
 )   
 
     (:functions
@@ -56,7 +56,7 @@
         )
         :effect (and
             (at end(obj_approached ?r ?iv))
-            (at end(not(item_victim_target_approached ?r ?iv)))
+            (at end(not(item_victim_target_approuched ?r ?iv)))
             (at end(decrease (battery_level ?r) 5))
             (at end(not(charger_approached ?r)))
         )
@@ -89,7 +89,7 @@
         )
         :effect (and
             (at end(not(obj_approached ?r ?iv)))
-            (at end(item_victim_target_approached ?r ?iv))
+            (at end(item_victim_target_approuched ?r ?iv))
             (at end(decrease (battery_level ?r) 5))
             (at end(not(charger_approached ?r)))
         )
@@ -101,7 +101,7 @@
         :condition (and
             (at start(item_victim_grabbed ?r ?iv))
             (at start(> (item_victim_carried ?r) 0))
-            (at start(item_victim_target_approached ?r ?iv))
+            (at start(item_victim_target_approuched ?r ?iv))
             (at start(> (battery_level ?r) 12))
         )
         :effect (and
@@ -135,6 +135,32 @@
         )
         :effect (and
             (at end(victim_rescued ?r ?v))
+        )
+    )
+;====================================================
+;====================================================
+    (:durative-action charger_approach
+        :parameters (?r - robot  ?iv - item_victim)
+        :duration (= ?duration 5)
+        :condition (and
+            (at start(> (battery_level ?r) 9))
+        )
+        :effect (and
+            (at end(charger_approached ?r))
+            (at end(decrease (battery_level ?r) 10))
+
+            (at end(not(obj_approached ?r ?iv)))
+            (at end(not(item_victim_target_approuched ?r ?iv)))
+        )
+    )
+    (:durative-action battery_charge_1
+        :parameters (?r - robot)
+        :duration (= ?duration 1)
+        :condition (and
+            (at start(charger_approached ?r))
+        )
+        :effect (and
+            (at end(increase (battery_level ?r) 1))
         )
     )
 ;====================================================

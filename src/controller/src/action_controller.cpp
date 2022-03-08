@@ -59,11 +59,17 @@ public:
 
     problem_expert_->addPredicate(plansys2::Predicate("(balls_dropped r1 b1)"));
 
-    problem_expert_->addFunction(plansys2::Function("= battery_level r1 100"));
-    problem_expert_->addFunction(plansys2::Function("= detected_balls b1 5"));
-    problem_expert_->addFunction(plansys2::Function("= at_target_balls b1 0"));
-    problem_expert_->addFunction(plansys2::Function("= carried_balls r1 0"));
-    problem_expert_->addFunction(plansys2::Function("= at_target_balls_goal b1 2"));
+    std::string f_battery_level = "= battery_level r1 " + std::to_string(battery_level);
+    std::string f_detected_balls = "= detected_balls b1 " + std::to_string(detected_balls);
+    std::string f_at_target_balls = "= at_target_balls b1 " + std::to_string(at_target_balls);
+    std::string f_carried_balls = "= carried_balls r1 " + std::to_string(at_target_balls);
+    std::string f_at_target_balls_goal = "= at_target_balls_goal b1 " + std::to_string(at_target_balls_goal);
+
+    problem_expert_->addFunction(plansys2::Function(f_battery_level));
+    problem_expert_->addFunction(plansys2::Function(f_detected_balls));
+    problem_expert_->addFunction(plansys2::Function(f_at_target_balls));
+    problem_expert_->addFunction(plansys2::Function(f_carried_balls));
+    problem_expert_->addFunction(plansys2::Function(f_at_target_balls_goal));
 
     problem_expert_->setGoal(plansys2::Goal("(and(balls_handeled r1 b1))"));
   }
@@ -107,7 +113,7 @@ public:
         //subscribe to battery_level topic to update battery funtion
         
         if(battery_level > 0 && charging == false){
-          std::cout << battery_level << std::endl;
+         
           std::string function_update = "= battery_level r1 " + std::to_string(battery_level);
           problem_expert_->updateFunction(plansys2::Function(function_update));
           problem_expert_->clearGoal();
@@ -116,17 +122,24 @@ public:
         std::vector<plansys2::Function> functions = problem_expert_->getFunctions();
         for (const auto &function : functions)
           {
+            std::cout<< function.name<<":"<< function.value<<std::endl;
+            /***if(function.name == "carried_balls")
+            {
+              std::cout << "carried_balls:" << function.value << std::endl;
+              total_carried_balls += function.value;
+              std::cout << "total_carried_balls:" << total_carried_balls << std::endl;
+            }***/
             if (function.name == "battery_level")
             {
               double battery_level = function.value;
-              if (battery_level < 2.0)
+              if (battery_level < 10.0)
               {
                 RCLCPP_WARN(get_logger(), "BATTERY LOW");
                 RCLCPP_WARN(get_logger(), "CANCELLING PLAN AND REPLAN");
                 RCLCPP_WARN(get_logger(), "SETTING GOAL CHARGE BATTERY");
                 problem_expert_->clearGoal();
                 executor_client_->cancel_plan_execution();
-                charging = true;
+                //problem_expert_->clearKnowledge();
                 state = CHARGE;
               }
             }
@@ -137,6 +150,7 @@ public:
 
           if (result.value().success) {
             RCLCPP_INFO(get_logger(), "Plan succesfully finished");
+
           } else {
             RCLCPP_ERROR(get_logger(), "Plan finished with error");
           }
@@ -146,6 +160,8 @@ public:
 
       case CHARGE:
       {
+        //problem_expert_->addInstance(plansys2::Instance{"r1", "robot"});
+
         problem_expert_->addInstance(plansys2::Instance{"entrance", "room"});
         problem_expert_->addInstance(plansys2::Instance{"first_floor", "room"});
         problem_expert_->addInstance(plansys2::Instance{"charging_room", "room"});
@@ -163,6 +179,7 @@ public:
 
         problem_expert_->setGoal(plansys2::Goal("(and(battery_full r1))"));
 
+        charging = true;
         state = START;
       }
       break;
@@ -183,8 +200,13 @@ private:
     StateType state;
 
   bool check = false;
-  int32_t battery_level = 0;
   bool charging = false;
+
+  int32_t battery_level = 100;
+  int32_t detected_balls = 5;
+  int32_t at_target_balls_goal = 2;
+  int32_t at_target_balls = 0;
+  int32_t carried_balls = 0;
 };
 
 int main(int argc, char ** argv)

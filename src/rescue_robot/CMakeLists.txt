@@ -31,11 +31,46 @@ ament_index_cpp
 plansys2_bt_actions
 )
 
+add_executable(battery_charge_1_action_node src/battery_charge_1_action_node.cpp)
+ament_target_dependencies(battery_charge_1_action_node ${dependencies})
+
+add_executable(charger_approach_action_node src/charger_approach_action_node.cpp)
+ament_target_dependencies(charger_approach_action_node ${dependencies})
+
+add_executable(item_move_action_node src/item_move_action_node.cpp)
+ament_target_dependencies(item_move_action_node ${dependencies})
+
+add_executable(item_victim_drop_action_node src/item_victim_drop_action_node.cpp)
+ament_target_dependencies(item_victim_drop_action_node ${dependencies})
+
+add_executable(item_victim_grab_action_node src/item_victim_grab_action_node.cpp)
+ament_target_dependencies(item_victim_grab_action_node ${dependencies})
+
+add_executable(obj_approach_action_node src/obj_approach_action_node.cpp)
+ament_target_dependencies(obj_approach_action_node ${dependencies})
+
+add_executable(target_approach_action_node src/target_approach_action_node.cpp)
+ament_target_dependencies(target_approach_action_node ${dependencies})
+
+add_executable(victim_rescue_action_node src/victim_rescue_action_node.cpp)
+ament_target_dependencies(victim_rescue_action_node ${dependencies})
+
 install(
   DIRECTORY launch pddl config behavior_trees_xml params
   DESTINATION share/${PROJECT_NAME})
 
 install(TARGETS
+  battery_charge_1_action_node
+  charger_approach_action_node
+
+  item_move_action_node
+  item_victim_drop_action_node
+
+  item_victim_grab_action_node
+  obj_approach_action_node
+
+  target_approach_action_node
+  victim_rescue_action_node
  
   ${plugin_libs}
   ARCHIVE DESTINATION lib
