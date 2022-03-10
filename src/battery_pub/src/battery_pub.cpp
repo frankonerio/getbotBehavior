@@ -19,7 +19,7 @@ class BatteryPub : public rclcpp::Node
     {
       Battery_Pub = this->create_publisher<std_msgs::msg::Int32>("/battery_pub", 1);
       timer_ = this->create_wall_timer(
-      500ms, std::bind(&BatteryPub::timer_callback, this));
+      5s, std::bind(&BatteryPub::timer_callback, this));
     }
 
   private:
@@ -27,7 +27,7 @@ class BatteryPub : public rclcpp::Node
     {
       auto message = std_msgs::msg::Int32();
       //level -= 20;
-      message.data = 1.0;
+      message.data = 9.0;
       RCLCPP_INFO(this->get_logger(), "Publishing: '%d'", message.data);
       Battery_Pub->publish(message);
     }

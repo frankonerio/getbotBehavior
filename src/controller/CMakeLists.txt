@@ -56,6 +56,9 @@ ament_target_dependencies(wander_action_node ${dependencies})
 add_executable(action_controller src/action_controller.cpp)
 ament_target_dependencies(action_controller ${dependencies})
 
+add_executable(camera_active_action_node src/camera_active_action_node.cpp)
+ament_target_dependencies(camera_active_action_node ${dependencies})
+
 
 install(DIRECTORY launch pddl DESTINATION share/${PROJECT_NAME})
 
@@ -77,6 +80,7 @@ install(TARGETS
   wander_action_node
 
   action_controller
+  camera_active_action_node
   
   
 

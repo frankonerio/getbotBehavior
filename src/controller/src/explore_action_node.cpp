@@ -35,7 +35,7 @@ private:
   void do_work()
   {
     if (progress_ < 1.0) {
-      progress_ += 0.5;
+      progress_ += 0.25;
       send_feedback(progress_, "Explore running");
     } else {
       finish(true, 1.0, "Explore completed");

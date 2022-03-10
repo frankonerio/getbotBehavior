@@ -44,11 +44,7 @@ def generate_launch_description():
         name ='battery_charge_1_action_node',
         namespace = namespace,
         output ='screen',
-        parameters=[
-            {
-                'specialized_arguments': ["p6building","robot_1"]
-            }
-        ])
+        parameters=[])
 
     charger_approach_cmd = Node(
         package='rescue_robot',
@@ -56,11 +52,7 @@ def generate_launch_description():
         name ='charger_approach_action_node',
         namespace = namespace,
         output ='screen',
-        parameters=[
-            {
-                'specialized_arguments': ["p6building","robot_1"]
-            }
-        ])
+        parameters=[])
 
     item_move_cmd = Node(
         package='rescue_robot',
@@ -68,11 +60,7 @@ def generate_launch_description():
         name ='item_move_action_node',
         namespace = namespace,
         output ='screen',
-        parameters=[
-            {
-                'specialized_arguments': ["p6building","robot_1"]
-            }
-        ])
+        parameters=[])
     
     item_victim_drop_cmd = Node(
         package='rescue_robot',
@@ -80,11 +68,7 @@ def generate_launch_description():
         name ='item_victim_drop_action_node',
         namespace = namespace,
         output ='screen',
-        parameters=[
-            {
-                'specialized_arguments': ["p6building","robot_1"]
-            }
-        ])
+        parameters=[])
 
     item_victim_grab_cmd = Node(
         package='rescue_robot',
@@ -92,23 +76,15 @@ def generate_launch_description():
         name ='item_victim_grab_action_node',
         namespace = namespace,
         output ='screen',
-        parameters=[
-            {
-                'specialized_arguments': ["p6building","robot_1"]
-            }
-        ])
+        parameters=[])
 
-    obj_approach_cmd = Node(
-        package='rescue_robot',
-        executable ='obj_approach_action_node',
-        name ='obj_approach_action_node',
-        namespace = namespace,
-        output ='screen',
-        parameters=[
-            {
-                'specialized_arguments': ["p6building","robot_1"]
-            }
-        ])
+    #obj_approach_cmd = Node(
+        #package='rescue_robot',
+        #executable ='obj_approach_action_node',
+        #name ='obj_approach_action_node',
+        #namespace = namespace,
+        #output ='screen',
+        #parameters=[])
 
     target_approach_cmd = Node(
         package='rescue_robot',
@@ -116,11 +92,7 @@ def generate_launch_description():
         name ='target_approach_action_node',
         namespace = namespace,
         output ='screen',
-        parameters=[
-            {
-                'specialized_arguments': ["p6building","robot_1"]
-            }
-        ])
+        parameters=[])
 
     victim_rescue_cmd = Node(
         package='rescue_robot',
@@ -128,11 +100,7 @@ def generate_launch_description():
         name ='victim_rescue_action_node',
         namespace = namespace,
         output ='screen',
-        parameters=[
-            {
-                'specialized_arguments': ["p6building","robot_1"]
-            }
-        ])
+        parameters=[])
 
     ld = LaunchDescription()
 
@@ -150,7 +118,7 @@ def generate_launch_description():
     ld.add_action(item_victim_drop_cmd)
 
     ld.add_action(item_victim_grab_cmd)
-    ld.add_action(obj_approach_cmd)
+    #ld.add_action(obj_approach_cmd)
 
     ld.add_action(target_approach_cmd)
     ld.add_action(victim_rescue_cmd)

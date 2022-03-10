@@ -26,7 +26,7 @@ class AskCharge : public plansys2::ActionExecutorClient
 {
 public:
   AskCharge()
-  : plansys2::ActionExecutorClient("askcharge", 2ms)
+  : plansys2::ActionExecutorClient("askcharge", 1s)
   {
     progress_ = 0.0;
   }
@@ -35,7 +35,7 @@ private:
   void do_work()
   {
     if (progress_ < 1.0) {
-      progress_ += 0.5;
+      progress_ += 0.25;
       send_feedback(progress_, "AskCharge running");
     } else {
       finish(true, 1.0, "AskCharge completed");

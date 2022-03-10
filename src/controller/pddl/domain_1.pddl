@@ -1,13 +1,13 @@
+
 (define (domain simple)
 (:requirements :strips :typing :adl :fluents :durative-actions)
 
-;; Types ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (:types
 robot
 room
-);; end Types ;;;;;;;;;;;;;;;;;;;;;;;;;
+)
 
-;; Predicates ;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (:predicates
 
 (robot_at ?r - robot ?ro - room)
@@ -16,12 +16,12 @@ room
 (battery_low ?r - robot)
 (charging_point_at ?ro - room)
 
-);; end Predicates ;;;;;;;;;;;;;;;;;;;;
-;; Functions ;;;;;;;;;;;;;;;;;;;;;;;;;
+)
+
 (:functions
 
-);; end Functions ;;;;;;;;;;;;;;;;;;;;
-;; Actions ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+)
+
 (:durative-action move
     :parameters (?r - robot ?r1 ?r2 - room)
     :duration ( = ?duration 5)
@@ -62,4 +62,4 @@ room
     )
 )
 
-);; end Domain ;;;;;;;;;;;;;;;;;;;;;;;;
+)

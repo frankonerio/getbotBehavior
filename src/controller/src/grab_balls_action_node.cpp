@@ -29,13 +29,15 @@ public:
   : plansys2::ActionExecutorClient("grab_balls", 2s)
   {
     progress_ = 0.0;
+
+    add_activation("camera_active_action_node");
   }
 
 private:
   void do_work()
   {
     if (progress_ < 2.0) {
-      progress_ += 0.5;
+      progress_ += 0.25;
       send_feedback(progress_, "grabBalls running");
     } else {
       finish(true, 1.0, "grabBall completed");

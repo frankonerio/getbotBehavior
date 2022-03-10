@@ -127,6 +127,16 @@ def generate_launch_description():
         namespace = namespace,
         output = 'screen',
         parameters = [])
+
+
+    camera_active_cmd = Node(
+        package='controller',
+        executable ='camera_active_action_node',
+        name ='camera_active_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
     ld = LaunchDescription()
 
     # Set environment variables
@@ -150,6 +160,9 @@ def generate_launch_description():
 
     ld.add_action(map_cmd)
     ld.add_action(wander_cmd)
+    ld.add_action(camera_active_cmd)
+
+
 
     
 
