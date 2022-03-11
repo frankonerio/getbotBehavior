@@ -31,8 +31,6 @@
         (balls_target_approached ?r - robot ?b - balls)
         (balls_dropped ?r - robot ?b - balls)
         (balls_handeled ?r - robot ?b - balls)
-
-        (charger_approached ?r - robot)
     )   
 
     (:functions
@@ -54,14 +52,12 @@
             ;(at start(ballsDetected ?b ?w))
             (at start(balls_dropped ?r ?b))
             (at start(< (carried_balls ?r) 1))
-            (at start(> (battery_level ?r) 15))
+            (at start(> (battery_level ?r) 5))
         )
         :effect (and
             (at end(balls_approached ?r ?b))
             (at end(not(balls_target_approached ?r ?b)))
             (at end(decrease (battery_level ?r) 5))
-            ;;;;;;;;;;;;
-            (at end (not (charger_approached ?r)))
         )
     )
 ;====================================================
@@ -71,7 +67,7 @@
         :condition (and
             (at start(balls_approached ?r ?b))
             (at start(< (carried_balls ?r) 1))
-            (at start(> (battery_level ?r) 13))
+            (at start(> (battery_level ?r) 3))
         )
         :effect (and
             (at end(balls_grabbed ?r ?b))
@@ -88,15 +84,13 @@
         :condition (and
             (at start(balls_grabbed ?r ?b))
             (at start(> (carried_balls ?r) 0))
-            ;(at start(balls_approached ?r ?b))
-            (at start(> (battery_level ?r) 15))
+            (at start(balls_approached ?r ?b))
+            (at start(> (battery_level ?r) 5))
         )
         :effect (and
             (at end(not(balls_approached ?r ?b)))
             (at end(balls_target_approached ?r ?b))
             (at end(decrease (battery_level ?r) 5))
-            ;;;;;;;;;;;;;
-            (at end (not (charger_approached ?r)))
         )
     )
 ;====================================================
@@ -107,7 +101,7 @@
             (at start(balls_grabbed ?r ?b))
             (at start(> (carried_balls ?r) 0))
             (at start(balls_target_approached ?r ?b))
-            (at start(> (battery_level ?r) 12))
+            (at start(> (battery_level ?r) 2))
         )
         :effect (and
             (at end(balls_dropped ?r ?b))
@@ -120,7 +114,7 @@
 ;====================================================
     (:durative-action handle_balls
         :parameters (?w - world ?r - robot ?b - balls)
-        :duration (= ?duration 0.001)
+        :duration (= ?duration 5)
         :condition (and
             (at start(balls_dropped ?r ?b))
             (at start(< (carried_balls ?r) 1))
@@ -131,34 +125,5 @@
             (at end(balls_handeled ?r ?b))
         )
     )
-;====================================================
-    
-    ;====================================================
-;====================================================
-    (:durative-action charger_approach
-        :parameters (?r - robot  ?b - balls)
-        :duration (= ?duration 5)
-        :condition (and
-            (at start(> (battery_level ?r) 9))
-        )
-        :effect (and
-            (at end(charger_approached ?r))
-            (at end(decrease (battery_level ?r) 10))
-
-            (at end(not(balls_approached ?r ?b)))
-            (at end(not(balls_target_approached ?r ?b)))
-        )
-    )
-    (:durative-action battery_charge_1
-        :parameters (?r - robot)
-        :duration (= ?duration 1)
-        :condition (and
-            (at start(charger_approached ?r))
-        )
-        :effect (and
-            (at end(increase (battery_level ?r) 10))
-        )
-    )
-;====================================================
 ;====================================================
 )

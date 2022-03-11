@@ -30,9 +30,10 @@ def generate_launch_description():
             'plansys2_bringup_launch_monolithic.py')),
         launch_arguments={
           'model_file': example_dir + '/pddl/ObjHandling_Domain.pddl',
-                        
+                        #example_dir + '/pddl/ObjHandling_Domain.pddl',
           'namespace': namespace
           }.items())
+
 
     # Specify the actions for robot_1
     
@@ -78,13 +79,13 @@ def generate_launch_description():
         output ='screen',
         parameters=[])
 
-    #obj_approach_cmd = Node(
-        #package='rescue_robot',
-        #executable ='obj_approach_action_node',
-        #name ='obj_approach_action_node',
-        #namespace = namespace,
-        #output ='screen',
-        #parameters=[])
+    obj_approach_cmd = Node(
+        package='rescue_robot',
+        executable ='obj_approach_action_node',
+        name ='obj_approach_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
 
     target_approach_cmd = Node(
         package='rescue_robot',
@@ -118,7 +119,7 @@ def generate_launch_description():
     ld.add_action(item_victim_drop_cmd)
 
     ld.add_action(item_victim_grab_cmd)
-    #ld.add_action(obj_approach_cmd)
+    ld.add_action(obj_approach_cmd)
 
     ld.add_action(target_approach_cmd)
     ld.add_action(victim_rescue_cmd)

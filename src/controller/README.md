@@ -1,53 +1,31 @@
-# PlanSys2 Simple Example
+set instance p6Building world
+set instance robot_1 robot
+set instance blue_balls balls
 
-## Description
+set predicate (balls_dropped robot_1 blue_balls)
 
-This is a simple example that shows the basic operation of PlanSys2. A simple PDDL domain has been specified, and we will use the PlanSys2 Terminal to insert commands. Actions simulate their execution.
+set function (= (battery_level robot_1) 100)
+set function (= (detected_balls blue_balls) 10)
+set function (= (at_target_balls blue_balls 0)
+set function (= (carried_balls robot_1) 0)
 
-## How to run
+set function (= (at_target_balls_goal blue_balls) 7)
+set goal (and(balls_handeled robot_1 blue_balls))
 
-In terminal 1:
+get plan
 
-```
-ros2 launch plansys2_simple_example plansys2_simple_example_launch.py
-```
 
-In terminal 2:
 
-```
-ros2 run plansys2_terminal plansys2_terminal        # enters in PlanSys2 Terminal
-set instance leia robot
-set instance entrance room
-set instance kitchen room
-set instance bedroom room
-set instance dinning room
-set instance bathroom room
-set instance chargingroom room
+set instance P6Building world
+set instance robot_1 robot
+set instance HDD_Boxes box
 
-get problem instances                               # Checks instances
+set predicate (item_victim_dropped robot_1 HDD_Boxes)
 
-set predicate (connected entrance dinning)
-set predicate (connected dinning entrance)
+set function (= (battery_level robot_1) 100)
+set function (= (item_victim_detected HDD_Boxes) 5)
+set function (= (item_victim_at_target HDD_Boxes) 0)
+set function (= (item_victim_carried robot_1) 0)
+set function (= (item_victim_at_target_goal HDD_Boxes) 5)
 
-set predicate (connected dinning kitchen)
-set predicate (connected kitchen dinning)
-
-set predicate (connected dinning bedroom)
-set predicate (connected bedroom dinning)
-
-set predicate (connected bathroom bedroom)
-set predicate (connected bedroom bathroom)
-
-set predicate (connected chargingroom kitchen)
-set predicate (connected kitchen chargingroom)
-
-set predicate (charging_point_at chargingroom)
-set predicate (battery_low leia)
-set predicate (robot_at leia entrance)
-
-get problem predicates                                # Checks predicates
-
-set goal (and(robot_at leia bathroom))                # Sets the goal
-get plan                                              # Creates plan and shows it
-run                                                   # Creates plan and runs it
-```
+set goal (and (item_moved robot_1 HDD_Boxes))
