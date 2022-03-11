@@ -1,0 +1,33 @@
+begin_groups
+10
+group
+1
+8 0 item_victim_target_approached 2 <robot_1> <hdd_boxes> 
+group
+1
+2 0 defined!item_victim_at_target 1 <hdd_boxes> 
+group
+1
+9 0 obj_approached 2 <robot_1> <hdd_boxes> 
+group
+1
+0 0 charger_approached 1 <robot_1> 
+group
+1
+1 0 defined!battery_level 1 <robot_1> 
+group
+1
+6 0 item_victim_dropped 2 <robot_1> <hdd_boxes> 
+group
+1
+5 0 item_moved 2 <robot_1> <hdd_boxes> 
+group
+1
+4 0 defined!item_victim_detected 1 <hdd_boxes> 
+group
+1
+3 0 defined!item_victim_carried 1 <robot_1> 
+group
+1
+7 0 item_victim_grabbed 2 <robot_1> <hdd_boxes> 
+end_groups
