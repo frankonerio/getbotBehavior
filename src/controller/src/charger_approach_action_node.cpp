@@ -22,11 +22,11 @@
 
 using namespace std::chrono_literals;
 
-class ChargeAction : public plansys2::ActionExecutorClient
+class ApproachCharger : public plansys2::ActionExecutorClient
 {
 public:
-  ChargeAction()
-  : plansys2::ActionExecutorClient("charge", 1s)
+  ApproachCharger()
+  : plansys2::ActionExecutorClient("charger_approach", 1s)
   {
     progress_ = 0.0;
   }
@@ -35,17 +35,17 @@ private:
   void do_work()
   {
     if (progress_ < 1.0) {
-      progress_ += 0.25;
-      send_feedback(progress_, "Charge running");
+      progress_ += 0.5;
+      send_feedback(progress_, "Approach_charger running");
     } else {
-      finish(true, 1.0, "Charge completed");
+      finish(true, 1.0, "approach_charger completed");
 
       progress_ = 0.0;
       std::cout << std::endl;
     }
 
     std::cout << "\r\e[K" << std::flush;
-    std::cout << "Charging ... [" << std::min(100.0, progress_ * 100.0) << "%]  " <<
+    std::cout << "approach_charger running ... [" << std::min(100.0, progress_ * 100.0) << "%]  " <<
       std::flush;
   }
 
@@ -55,9 +55,9 @@ private:
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<ChargeAction>();
+  auto node = std::make_shared<ApproachCharger>();
 
-  node->set_parameter(rclcpp::Parameter("action_name", "charge"));
+  node->set_parameter(rclcpp::Parameter("action_name", "charger_approach"));
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
   rclcpp::spin(node->get_node_base_interface());

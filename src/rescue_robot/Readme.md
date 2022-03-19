@@ -1,77 +1,50 @@
-set instance P6Building world
+Background Domain Problems
 
+
+1. Exploring a world with a pre-loaded map and full battery
+
+set instance p1building world
 set instance robot_1 robot
+set predicate (map_available robot_1 p1building)
+set function (= (battery_level robot_1) 100)
+set goal (and (exploring robot_1 p1building))
+get plan
+
+2. Continue mapping a world with a pre-loaded map and full battery
+
+set instance P2Building world
 set instance robot_2 robot
-
-set instance HDD_Boxes ball
-set instance Students victim
-
-set predicate (item_victim_dropped robot_1 HDD_Boxes)
-set predicate (item_victim_dropped robot_2 Students)
-
-set function (= (battery_level robot_1) 100)
+set predicate (map_available robot_2 P2Building)
 set function (= (battery_level robot_2) 100)
+set goal (and (mapping robot_2 P2Building))
+get plan
 
-set function (= (item_victim_detected HDD_Boxes) 10)
-set function (= (item_victim_detected Students) 10)
+3. Start Mapping in a completely new world and full battery (Problem)
 
-set function (= (item_victim_at_target HDD_Boxes) 0)
-set function (= (item_victim_at_target Students) 0)
-
-set function (= (item_victim_carried robot_1) 0)
-set function (= (item_victim_carried robot_2) 0)
-
-set function (= (item_victim_at_target_goal HDD_Boxes) 5)
-set function (= (item_victim_at_target_goal Students) 2)
-
-set goal (and (item_moved robot_1 HDD_Boxes) (victim_rescued robot_2 Students))
+set instance P3Building world
+set instance robot_3 robot
+set function (= (battery_level robot_3) 10)
+set goal (and (mapping robot_3 P3Building))
 get plan
 
 
-###################### single robot ######################################
 
-set instance P6Building world
 
-set instance robot_1 robot
-set instance students victim
+4. Start Mapping in a completely new world detect objectes in it with very low battery
 
-set predicate (item_victim_dropped robot_1 students)
-
-set function (= (battery_level robot_1) 1000)
-set function (= (item_victim_detected students) 10)
-set function (= (item_victim_at_target students) 0)
-set function (= (item_victim_carried robot_1) 0)
-set function (= (item_victim_at_target_goal students) 5)
-
-set goal (and (victim_rescued robot_1 students))
+set instance P4Building world
+set instance robot_4 robot
+set function (= (battery_level robot_4) 10)
+set goal (and (mapping robot_4 P4Building) (obj_detecting robot_4 P4Building))
 get plan
 
-#######################################################
-set instance P6Building world
-set instance robot_1 robot
-set instance HDD_Boxes box
 
-set predicate (item_victim_dropped robot_1 HDD_Boxes)
+problem_expert_->addInstance(plansys2::Instance{"p4Building", "world"});
+      problem_expert_->addInstance(plansys2::Instance{"robot_4", "robot"});
+ 
 
-set function (= (battery_level robot_1) 100)
-set function (= (item_victim_detected HDD_Boxes) 5)
-set function (= (item_victim_at_target HDD_Boxes) 0)
-set function (= (item_victim_carried robot_1) 0)
-set function (= (item_victim_at_target_goal HDD_Boxes) 5)
+    //problem_expert_->addPredicate(plansys2::Predicate("(piece_not_used steering_wheel_3)"));
 
-set goal (and (item_moved robot_1 HDD_Boxes))
+      problem_expert_->addFunction(plansys2::Function("= battery_level robot_4 10"));
 
-
-set instance P6Building world
-set instance robot_1 robot
-set instance HDD_Boxes box
-
-set predicate (item_victim_dropped robot_1 HDD_Boxes)
-
-set function (= (battery_level robot_1) 100)
-set function (= (item_victim_detected HDD_Boxes) 5)
-set function (= (item_victim_at_target HDD_Boxes) 0)
-set function (= (item_victim_carried robot_1) 0)
-set function (= (item_victim_at_target_goal HDD_Boxes) 0)
-
-set goal (and (item_moved robot_1 HDD_Boxes))
+      problem_expert_->setGoal(plansys2::Goal("(and(mapping robot_4 P4Building) (obj_detecting robot_4 P4Building)"));

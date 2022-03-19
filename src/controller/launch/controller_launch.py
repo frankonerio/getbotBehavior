@@ -46,93 +46,103 @@ def generate_launch_description():
         output ='screen',
         parameters=[])
 
-    charge_cmd = Node(
-        package ='controller',
-        executable ='charge_action_node',
-        name ='charge_action_node',
-        namespace = namespace,
-        output='screen',
-        parameters=[])
-
-    ask_charge_cmd = Node(
+    approach_items_cmd = Node(
         package = 'controller',
-        executable = 'ask_charge_action_node',
-        name = 'ask_charge_action_node',
-        namespace = namespace,
-        output = 'screen',
-        parameters = [])  
-        
-    approach_balls_cmd = Node(
-        package = 'controller',
-        executable = 'approach_balls_action_node',
-        name = 'approach_balls_action_node',
+        executable = 'approach_items_action_node',
+        name = 'approach_items_action_node',
         namespace = namespace,
         output = 'screen',
         parameters = []) 
 
-    approach_balls_target_cmd = Node(
+    approach_items_target_cmd = Node(
         package = 'controller',
-        executable = 'approach_balls_target_action_node',
-        name = 'approach_balls_target_action_node',
+        executable = 'approach_items_target_action_node',
+        name = 'approach_items_target_action_node',
         namespace = namespace,
         output = 'screen',
         parameters = [])  
         
         
-    drop_balls_cmd = Node(
+    drop_items_cmd = Node(
         package = 'controller',
-        executable = 'drop_balls_action_node',
-        name = 'drop_balls_action_node',
+        executable = 'drop_items_action_node',
+        name = 'drop_items_action_node',
         namespace = namespace,
         output = 'screen',
         parameters = [])  
         
-    explore_cmd = Node(
-        package = 'controller',
-        executable = 'explore_action_node',
-        name = 'explore_action_node',
-        namespace = namespace,
-        output = 'screen',
-        parameters = []) 
         
-    grab_balls_cmd = Node(
+    grab_items_cmd = Node(
         package = 'controller',
-        executable = 'grab_balls_action_node',
-        name = 'grab_balls_action_node',
+        executable = 'grab_items_action_node',
+        name = 'grab_items_action_node',
         namespace = namespace,
         output = 'screen',
         parameters = [])  
 
-    handle_balls_cmd = Node(
+    handle_items_cmd = Node(
         package = 'controller',
-        executable = 'handle_balls_action_node',
-        name = 'handle_balls_action_node',
+        executable = 'handle_items_action_node',
+        name = 'handle_items_action_node',
         namespace = namespace,
         output = 'screen',
         parameters = [])
         
         
-    map_cmd = Node(
-        package = 'controller',
-        executable = 'map_action_node',
-        name = 'map_action_node',
-        namespace = namespace,
-        output = 'screen',
-        parameters = [])
-        
-    wander_cmd = Node(
-        package = 'controller',
-        executable = 'wander_action_node',
-        name = 'wander_action_node',
-        namespace = namespace,
-        output = 'screen',
-        parameters = [])
-
-
+    
     camera_active_cmd = Node(
         package='controller',
         executable ='camera_active_action_node',
         name ='camera_active_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    charger_approach_cmd = Node(
+        package='controller',
+        executable ='charger_approach_action_node',
+        name ='charger_approach_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    battery_charge_1_cmd = Node(
+        package='controller',
+        executable ='battery_charge_1_action_node',
+        name ='battery_charge_1_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+        
+    explore_start_cmd = Node(
+        package='rescue_robot',
+        executable ='explore_start_action_node',
+        name ='explore_start_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    map_start_cmd = Node(
+        package='rescue_robot',
+        executable ='map_start_action_node',
+        name ='map_start_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    wander_around_cmd = Node(
+        package='rescue_robot',
+        executable ='wander_around_action_node',
+        name ='wander_around_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+
+    obj_detect_start_cmd = Node(
+        package='rescue_robot',
+        executable ='obj_detect_start_action_node',
+        name ='obj_detect_start_action_node',
         namespace = namespace,
         output ='screen',
         parameters=[])
@@ -147,23 +157,25 @@ def generate_launch_description():
     ld.add_action(plansys2_cmd)
 
     ld.add_action(move_cmd)
-    ld.add_action(charge_cmd)
-    ld.add_action(ask_charge_cmd)
+    #ld.add_action(charge_cmd)
 
-    ld.add_action(approach_balls_cmd)
-    ld.add_action(approach_balls_target_cmd)
-    ld.add_action(drop_balls_cmd)
-
-    ld.add_action(explore_cmd)
-    ld.add_action(grab_balls_cmd)
-    ld.add_action(handle_balls_cmd)
-
-    ld.add_action(map_cmd)
-    ld.add_action(wander_cmd)
-    ld.add_action(camera_active_cmd)
-
-
+   
+    ld.add_action(approach_items_cmd)
+    ld.add_action(approach_items_target_cmd)
+    ld.add_action(drop_items_cmd)
 
     
+    ld.add_action(grab_items_cmd)
+    ld.add_action(handle_items_cmd)
+    ld.add_action(camera_active_cmd)
+
+    ld.add_action(battery_charge_1_cmd)
+    ld.add_action(charger_approach_cmd)
+    ld.add_action(explore_start_cmd)
+
+    ld.add_action(map_start_cmd)
+    ld.add_action(wander_around_cmd)
+    ld.add_action(obj_detect_start_cmd)
+ 
 
     return ld

@@ -19,14 +19,16 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "rclcpp_action/rclcpp_action.hpp"
+#include "std_msgs/msg/string.hpp"
+
 
 using namespace std::chrono_literals;
 
-class ApproachBallsTarget: public plansys2::ActionExecutorClient
+class ApproachItemsAction : public plansys2::ActionExecutorClient
 {
 public:
-    ApproachBallsTarget()
-  : plansys2::ActionExecutorClient("approach_balls_target", 1s)
+  ApproachItemsAction()
+  : plansys2::ActionExecutorClient("approach_items", 1s)
   {
     progress_ = 0.0;
   }
@@ -36,16 +38,16 @@ private:
   {
     if (progress_ < 1.0) {
       progress_ += 0.5;
-      send_feedback(progress_, "approachBallsTarget running");
+      send_feedback(progress_, "Approach_items running");
     } else {
-      finish(true, 1.0, "approachBallsTarget completed");
+      finish(true, 1.0, "approach_items Completed");
 
       progress_ = 0.0;
       std::cout << std::endl;
     }
 
     std::cout << "\r\e[K" << std::flush;
-    std::cout << "approachBallsTarget ... [" << std::min(100.0, progress_ * 100.0) << "%]  " <<
+    std::cout << "Approach_items running... [" << std::min(100.0, progress_ * 100.0) << "%]  " <<
       std::flush;
   }
 
@@ -55,9 +57,9 @@ private:
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<ApproachBallsTarget>();
+  auto node = std::make_shared<ApproachItemsAction>();
 
-  node->set_parameter(rclcpp::Parameter("action_name", "approach_balls_target"));
+  node->set_parameter(rclcpp::Parameter("action_name", "approach_items"));
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
   rclcpp::spin(node->get_node_base_interface());
