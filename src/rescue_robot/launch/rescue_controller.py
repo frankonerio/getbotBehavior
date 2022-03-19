@@ -38,6 +38,10 @@ def generate_launch_description():
     
     # Specify the actions
 
+    ##########################################
+    #           BATTERY NODES                #
+    ##########################################
+
     battery_charge_1_cmd = Node(
         package='rescue_robot',
         executable ='battery_charge_1_action_node',
@@ -53,6 +57,10 @@ def generate_launch_description():
         namespace = namespace,
         output ='screen',
         parameters=[])
+
+    ##########################################
+    #      OBJECT HANDLING NODES             #
+    ##########################################
 
     item_move_cmd = Node(
         package='rescue_robot',
@@ -102,7 +110,10 @@ def generate_launch_description():
         output ='screen',
         parameters=[])
 
-    
+    ##########################################
+    #           BACKGROUND NODES             #
+    ##########################################
+
     explore_start_cmd = Node(
         package='rescue_robot',
         executable ='explore_start_action_node',
@@ -136,7 +147,83 @@ def generate_launch_description():
         output ='screen',
         parameters=[])
 
+    ##########################################
+    #           NAVIGATION NODES             #
+    ##########################################
+
+    elevator_approach_cmd = Node(
+        package='rescue_robot',
+        executable ='elevator_approach_action_node',
+        name ='elevator_approach_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+
+    stairs_approach_cmd = Node(
+        package='rescue_robot',
+        executable ='stairs_approach_action_node',
+        name ='stairs_approach_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    elevator_up_cmd = Node(
+        package='rescue_robot',
+        executable ='elevator_up_action_node',
+        name ='elevator_up_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    elevator_down_cmd = Node(
+        package='rescue_robot',
+        executable ='elevator_down_action_node',
+        name ='elevator_down_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    stairs_up_cmd = Node(
+        package='rescue_robot',
+        executable ='stairs_up_action_node',
+        name ='stairs_up_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    stairs_down_cmd = Node(
+        package='rescue_robot',
+        executable ='stairs_down_action_node',
+        name ='stairs_down_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
     
+    door_open_cmd = Node(
+        package='rescue_robot',
+        executable ='door_open_action_node',
+        name ='door_open_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+    
+    door_destination_navigate_cmd = Node(
+        package='rescue_robot',
+        executable ='door_destination_navigate_node',
+        name ='door_destination_navigate_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    destination_navigate_cmd = Node(
+        package='rescue_robot',
+        executable ='destination_navigate_node',
+        name ='destination_navigate_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
     ld = LaunchDescription()
 
     # Set environment variables
@@ -146,24 +233,51 @@ def generate_launch_description():
     # Declare the launch options
     ld.add_action(plansys2_cmd)
 
+    ##########################################
+    #           BATTERY NODES                #
+    ##########################################
+
     ld.add_action(battery_charge_1_cmd)
     ld.add_action(charger_approach_cmd)
 
     ld.add_action(item_move_cmd)
     ld.add_action(item_victim_drop_cmd)
 
-    ld.add_action(item_victim_grab_cmd)
-    ld.add_action(obj_approach_cmd)
+    ##########################################
+    #           BACKGROUND NODES             #
+    ##########################################
 
+    ld.add_action(map_start_cmd)
+    ld.add_action(wander_around_cmd)
+
+    ld.add_action(obj_detect_start_cmd)
+    
+    ##########################################
+    #      OBJECT HANDLING NODES             #
+    ##########################################
+
+    ld.add_action(item_victim_grab_cmd)
+    ld.add_action(explore_start_cmd)
+
+    ld.add_action(obj_approach_cmd)
     ld.add_action(target_approach_cmd)
+
     ld.add_action(victim_rescue_cmd)
 
-    ld.add_action(explore_start_cmd)
-    ld.add_action(map_start_cmd)
+    ##########################################
+    #           NAVIGATION NODES             #
+    ##########################################
 
-    ld.add_action(wander_around_cmd)
-    ld.add_action(obj_detect_start_cmd)
- 
- 
+    ld.add_action(elevator_approach_cmd)
+    ld.add_action(stairs_approach_cmd)
+    ld.add_action(elevator_up_cmd)
+    ld.add_action(elevator_down_cmd)
+    ld.add_action(stairs_up_cmd)
+    ld.add_action(stairs_down_cmd)
+    ld.add_action(door_open_cmd)
+    ld.add_action(door_destination_navigate_cmd)
+    ld.add_action(destination_navigate_node_cmd)
+    
+    
  
     return ld

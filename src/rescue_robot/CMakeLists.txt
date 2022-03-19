@@ -31,44 +31,95 @@ ament_index_cpp
 plansys2_bt_actions
 )
 
-add_executable(battery_charge_1_action_node src/battery_charge_1_action_node.cpp)
+################################################################################
+#                         BATTERY ACTION NODES                                 #
+################################################################################
+
+add_executable(battery_charge_1_action_node src/battery/battery_charge_1_action_node.cpp)
 ament_target_dependencies(battery_charge_1_action_node ${dependencies})
 
-add_executable(charger_approach_action_node src/charger_approach_action_node.cpp)
+add_executable(charger_approach_action_node src/battery/charger_approach_action_node.cpp)
 ament_target_dependencies(charger_approach_action_node ${dependencies})
 
-add_executable(item_move_action_node src/item_move_action_node.cpp)
+################################################################################
+#                    OBJECT HANDLING ACTION NODES                              #
+################################################################################
+
+add_executable(item_move_action_node src/object_handling/item_move_action_node.cpp)
 ament_target_dependencies(item_move_action_node ${dependencies})
 
-add_executable(item_victim_drop_action_node src/item_victim_drop_action_node.cpp)
+add_executable(item_victim_drop_action_node src/object_handling/item_victim_drop_action_node.cpp)
 ament_target_dependencies(item_victim_drop_action_node ${dependencies})
 
-add_executable(item_victim_grab_action_node src/item_victim_grab_action_node.cpp)
+add_executable(item_victim_grab_action_node src/object_handling/item_victim_grab_action_node.cpp)
 ament_target_dependencies(item_victim_grab_action_node ${dependencies})
 
-add_executable(obj_approach_action_node src/obj_approach_action_node.cpp)
-ament_target_dependencies(obj_approach_action_node ${dependencies})
-
-add_executable(target_approach_action_node src/target_approach_action_node.cpp)
-ament_target_dependencies(target_approach_action_node ${dependencies})
-
-add_executable(victim_rescue_action_node src/victim_rescue_action_node.cpp)
+add_executable(victim_rescue_action_node src/object_handling/victim_rescue_action_node.cpp)
 ament_target_dependencies(victim_rescue_action_node ${dependencies})
 
-add_executable(explore_start_action_node src/explore_start_action_node.cpp)
-ament_target_dependencies(explore_start_action_node ${dependencies})
+################################################################################
+#                         NAVIGATION ACTION NODES                              #
+################################################################################
 
-add_executable(map_start_action_node src/map_start_action_node.cpp)
-ament_target_dependencies(map_start_action_node ${dependencies})
+add_executable(obj_approach_action_node src/navigation/obj_approach_action_node.cpp)
+ament_target_dependencies(obj_approach_action_node ${dependencies})
 
-add_executable(wander_around_action_node src/wander_around_action_node.cpp)
+add_executable(target_approach_action_node src/navigation/target_approach_action_node.cpp)
+ament_target_dependencies(target_approach_action_node ${dependencies})
+
+add_executable(elevator_approach_action_node src/navigation/elevator_approach_action_node.cpp)
+ament_target_dependencies(elevator_approach_action_node ${dependencies})
+
+add_executable(stairs_approach_action_node src/navigation/stairs_approach_action_node.cpp)
+ament_target_dependencies(stairs_approach_action_node ${dependencies})
+
+add_executable(elevator_up_action_node src/navigation/elevator_up_action_node.cpp)
+ament_target_dependencies(elevator_up_action_node ${dependencies})
+
+add_executable(elevator_down_action_node src/navigation/elevator_down_action_node.cpp)
+ament_target_dependencies(elevator_down_action_node ${dependencies})
+
+add_executable(stairs_up_action_node src/navigation/stairs_up_action_node.cpp)
+ament_target_dependencies(stairs_up_action_node ${dependencies})
+
+add_executable(stairs_down_action_node src/navigation/stairs_down_action_node.cpp)
+ament_target_dependencies(stairs_down_action_node ${dependencies})
+
+add_executable(door_open_action_node src/navigation/door_open_action_node.cpp)
+ament_target_dependencies(door_open_action_node ${dependencies})
+
+add_executable(door_destination_navigate_node src/navigation/door_destination_navigate_node.cpp)
+ament_target_dependencies(door_destination_navigate_node ${dependencies})
+
+add_executable(destination_navigate_node src/navigation/destination_navigate_node.cpp)
+ament_target_dependencies(destination_navigate_node ${dependencies})
+
+################################################################################
+#                         BACKGROUND ACTION NODES                              #
+################################################################################
+
+add_executable(wander_around_action_node src/background/wander_around_action_node.cpp)
 ament_target_dependencies(wander_around_action_node ${dependencies})
 
-add_executable(obj_detect_start_action_node src/obj_detect_start_action_node.cpp)
+add_executable(obj_detect_start_action_node src/background/obj_detect_start_action_node.cpp)
 ament_target_dependencies(obj_detect_start_action_node ${dependencies})
 
-add_executable(controller_node src/controller_node.cpp)
+add_executable(explore_start_action_node src/background/explore_start_action_node.cpp)
+ament_target_dependencies(explore_start_action_node ${dependencies})
+
+add_executable(map_start_action_node src/background/map_start_action_node.cpp)
+ament_target_dependencies(map_start_action_node ${dependencies})
+
+################################################################################
+#                         CONTROLLER ACTION NODES                              #
+################################################################################
+
+add_executable(controller_node src/controllers/controller_node.cpp)
 ament_target_dependencies(controller_node ${dependencies})
+
+add_executable(navigation_controller src/controllers/navigation_controller.cpp)
+ament_target_dependencies(navigation_controller ${dependencies})
+
 
 install(DIRECTORY launch pddl config behavior_trees_xml params DESTINATION share/${PROJECT_NAME})
 
@@ -89,9 +140,22 @@ install(TARGETS
   map_start_action_node
 
   wander_around_action_node
-  obj_detect_start_action_node
+  elevator_approach_action_node
 
-  controller_node
+  stairs_approach_action_node
+  elevator_down_action_node
+
+  elevator_up_action_node
+  elevator_approach_action_node
+
+  stairs_up_action_node
+  stairs_down_action_node
+
+  door_open_action_node
+  door_destination_navigate_node
+
+  destination_navigate_node
+  navigation_controller
  
   ${plugin_libs}
   ARCHIVE DESTINATION lib
