@@ -55,9 +55,22 @@ ament_target_dependencies(target_approach_action_node ${dependencies})
 add_executable(victim_rescue_action_node src/victim_rescue_action_node.cpp)
 ament_target_dependencies(victim_rescue_action_node ${dependencies})
 
-install(
-  DIRECTORY launch pddl config behavior_trees_xml params
-  DESTINATION share/${PROJECT_NAME})
+add_executable(explore_start_action_node src/explore_start_action_node.cpp)
+ament_target_dependencies(explore_start_action_node ${dependencies})
+
+add_executable(map_start_action_node src/map_start_action_node.cpp)
+ament_target_dependencies(map_start_action_node ${dependencies})
+
+add_executable(wander_around_action_node src/wander_around_action_node.cpp)
+ament_target_dependencies(wander_around_action_node ${dependencies})
+
+add_executable(obj_detect_start_action_node src/obj_detect_start_action_node.cpp)
+ament_target_dependencies(obj_detect_start_action_node ${dependencies})
+
+add_executable(controller_node src/controller_node.cpp)
+ament_target_dependencies(controller_node ${dependencies})
+
+install(DIRECTORY launch pddl config behavior_trees_xml params DESTINATION share/${PROJECT_NAME})
 
 install(TARGETS
   battery_charge_1_action_node
@@ -71,6 +84,14 @@ install(TARGETS
 
   target_approach_action_node
   victim_rescue_action_node
+
+  explore_start_action_node
+  map_start_action_node
+
+  wander_around_action_node
+  obj_detect_start_action_node
+
+  controller_node
  
   ${plugin_libs}
   ARCHIVE DESTINATION lib

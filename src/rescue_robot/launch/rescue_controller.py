@@ -29,8 +29,7 @@ def generate_launch_description():
             'launch',
             'plansys2_bringup_launch_monolithic.py')),
         launch_arguments={
-          'model_file': example_dir + '/pddl/ObjHandling_Domain.pddl',
-                        #example_dir + '/pddl/ObjHandling_Domain.pddl',
+          'model_file': example_dir + '/pddl/Domain.pddl',
           'namespace': namespace
           }.items())
 
@@ -103,6 +102,41 @@ def generate_launch_description():
         output ='screen',
         parameters=[])
 
+    
+    explore_start_cmd = Node(
+        package='rescue_robot',
+        executable ='explore_start_action_node',
+        name ='explore_start_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    map_start_cmd = Node(
+        package='rescue_robot',
+        executable ='map_start_action_node',
+        name ='map_start_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    wander_around_cmd = Node(
+        package='rescue_robot',
+        executable ='wander_around_action_node',
+        name ='wander_around_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+
+    obj_detect_start_cmd = Node(
+        package='rescue_robot',
+        executable ='obj_detect_start_action_node',
+        name ='obj_detect_start_action_node',
+        namespace = namespace,
+        output ='screen',
+        parameters=[])
+
+    
     ld = LaunchDescription()
 
     # Set environment variables
@@ -123,5 +157,13 @@ def generate_launch_description():
 
     ld.add_action(target_approach_cmd)
     ld.add_action(victim_rescue_cmd)
+
+    ld.add_action(explore_start_cmd)
+    ld.add_action(map_start_cmd)
+
+    ld.add_action(wander_around_cmd)
+    ld.add_action(obj_detect_start_cmd)
+ 
+ 
  
     return ld

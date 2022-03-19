@@ -9,11 +9,11 @@
 
 using namespace std::chrono_literals;
 
-class WanderAction : public plansys2::ActionExecutorClient
+class ExploreStart : public plansys2::ActionExecutorClient
 {
 public:
-  WanderAction()
-  : plansys2::ActionExecutorClient("wander", 2s)
+    ExploreStart()
+  : plansys2::ActionExecutorClient("explore_start", 2s)
   {
     progress_ = 0.0;
   }
@@ -21,18 +21,18 @@ public:
 private:
   void do_work()
   {
-    if (progress_ < 1.0) {
-      progress_ += 0.25;
-      send_feedback(progress_, "wander running");
+    if (progress_ < 2.0) {
+      progress_ += 0.5;
+      send_feedback(progress_, "Explore running");
     } else {
-      finish(true, 1.0, "wander completed");
+      finish(true, 1.0, "EXplore completed");
 
       progress_ = 0.0;
       std::cout << std::endl;
     }
 
     std::cout << "\r\e[K" << std::flush;
-    std::cout << "Wandering ... [" << std::min(100.0, progress_ * 100.0) << "%]  " <<
+    std::cout << "Exploring... [" << std::min(100.0, progress_ * 100.0) << "%]  " <<
       std::flush;
   }
 
@@ -42,9 +42,9 @@ private:
 int main(int argc, char ** argv)
 {
   rclcpp::init(argc, argv);
-  auto node = std::make_shared<WanderAction>();
+  auto node = std::make_shared<ExploreStart>();
 
-  node->set_parameter(rclcpp::Parameter("action_name", "wander"));
+  node->set_parameter(rclcpp::Parameter("action_name", "explore_start"));
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
   rclcpp::spin(node->get_node_base_interface());

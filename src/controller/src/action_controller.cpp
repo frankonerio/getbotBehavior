@@ -53,44 +53,26 @@ public:
 
   void init_knowledge()
   {
-      //
-      problem_expert_->addInstance(plansys2::Instance{"r1", "robot"});
+      //Initialise Knowledge Base
+      problem_expert_->addInstance(plansys2::Instance{"p6Building", "world"});
+      problem_expert_->addInstance(plansys2::Instance{"robot_1", "robot"});
+      problem_expert_->addInstance(plansys2::Instance{"blue_balls", "items"});
 
-      problem_expert_->addInstance(plansys2::Instance{"entrance", "room"});
-      problem_expert_->addInstance(plansys2::Instance{"first_floor", "room"});
-      problem_expert_->addInstance(plansys2::Instance{"charging_room", "room"});
+      problem_expert_->addPredicate(plansys2::Predicate("(items_dropped robot_1 blue_balls)"));
 
-      problem_expert_->addPredicate(plansys2::Predicate("(connected entrance first_floor)"));
-      problem_expert_->addPredicate(plansys2::Predicate("(connected first_floor entrance)"));
-
-      problem_expert_->addPredicate(plansys2::Predicate("(connected charging_room first_floor)"));
-      problem_expert_->addPredicate(plansys2::Predicate("(connected first_floor charging_room)"));
-      //problem_expert_->addPredicate(plansys2::Predicate("(battery_low r1)"));
-
-      
-      problem_expert_->addPredicate(plansys2::Predicate("(robot_at r1 entrance)"));
-      problem_expert_->addPredicate(plansys2::Predicate("(charging_point_at charging_room)"));
-
-      //
-      problem_expert_->addInstance(plansys2::Instance{"w1", "world"});
-      //problem_expert_->addInstance(plansys2::Instance{"r1", "robot"});
-      problem_expert_->addInstance(plansys2::Instance{"b1", "balls"});
-
-      problem_expert_->addPredicate(plansys2::Predicate("(balls_dropped r1 b1)"));
-
-      std::string f_battery_level = "= battery_level r1 " + std::to_string(battery_level);
-      std::string f_detected_balls = "= detected_balls b1 " + std::to_string(detected_balls);
-      std::string f_at_target_balls = "= at_target_balls b1 " + std::to_string(at_target_balls);
-      std::string f_carried_balls = "= carried_balls r1 " + std::to_string(carried_balls);
-      std::string f_at_target_balls_goal = "= at_target_balls_goal b1 " + std::to_string(at_target_balls_goal);
+      std::string f_battery_level = "= battery_level robot_1 " + std::to_string(battery_level);
+      std::string f_detected_items = "= detected_items blue_balls " + std::to_string(detected_items);
+      std::string f_at_target_items = "= at_target_items blue_balls " + std::to_string(at_target_items);
+      std::string f_carried_items = "= carried_items robot_1 " + std::to_string(carried_items);
+      std::string f_at_target_items_goal = "= at_target_items_goal blue_balls " + std::to_string(at_target_items_goal);
 
       problem_expert_->addFunction(plansys2::Function(f_battery_level));
-      problem_expert_->addFunction(plansys2::Function(f_detected_balls));
-      problem_expert_->addFunction(plansys2::Function(f_at_target_balls));
-      problem_expert_->addFunction(plansys2::Function(f_carried_balls));
-      problem_expert_->addFunction(plansys2::Function(f_at_target_balls_goal));
+      problem_expert_->addFunction(plansys2::Function(f_detected_items));
+      problem_expert_->addFunction(plansys2::Function(f_at_target_items));
+      problem_expert_->addFunction(plansys2::Function(f_carried_items));
+      problem_expert_->addFunction(plansys2::Function(f_at_target_items_goal));
 
-      //problem_expert_->setGoal(plansys2::Goal("(and(balls_handeled r1 b1))"));
+
   }
 
   void step()
@@ -99,6 +81,7 @@ public:
     {
       case START:
       {
+        
         auto domain = domain_expert_->getDomain();
         auto problem = problem_expert_->getProblem();
         auto plan = planner_client_->getPlan(domain, problem);
@@ -128,16 +111,18 @@ public:
             RCLCPP_INFO_STREAM(get_logger(), "[" << action_feedback.action << " " << action_feedback.completion * 100.0 << "%]");
           }
           std::cout << std::endl;
+          
 
         //subscribe to battery_level topic to update battery funtion
         
-        if(battery_level < 10){
+        
+        /**if(battery_level < 12.0 ){
          
-          std::string function_update = "= battery_level r1 " + std::to_string(battery_level);
+          std::string function_update = "= battery_level robot_1 " + std::to_string(battery_level);
           problem_expert_->updateFunction(plansys2::Function(function_update));
-          //problem_expert_->clearGoal();
-        }
-
+          problem_expert_->clearGoal();
+        }**/
+        
         std::vector<plansys2::Function> functions = problem_expert_->getFunctions();
         for (const auto &function : functions)
           {
@@ -146,7 +131,7 @@ public:
             if (function.name == "battery_level")
             {
               double battery_level = function.value;
-              if (battery_level < 10.0 && !charging)
+              if (battery_level < 15.0 && !re_planning)
               {
                 RCLCPP_WARN(get_logger(), "BATTERY LOW");
                 RCLCPP_WARN(get_logger(), "CANCELLING PLAN AND REPLAN");
@@ -155,7 +140,8 @@ public:
                 problem_expert_->clearGoal();
                 executor_client_->cancel_plan_execution();
                 //problem_expert_->clearKnowledge();
-                state = CHARGE;
+                state = Updateknowledge;
+                break;
               }
             }
           }
@@ -166,44 +152,6 @@ public:
           if (result.value().success) {
 
             RCLCPP_INFO(get_logger(), "Plan succesfully finished");
-            //if(replan){
-              problem_expert_->clearGoal();
-              battery_level = 100;
-
-               std::vector<plansys2::Function> functions = problem_expert_->getFunctions();
-              for (const auto &function : functions)
-              {
-                std::string function_update = "= battery_level r1 " + std::to_string(battery_level);
-                problem_expert_->updateFunction(plansys2::Function(function_update));
-
-            //remove block
-
-                if(function.name == "detected_balls"){
-                  std::string f_detected_balls = "= detected_balls b1 " + std::to_string(function.value);
-                  problem_expert_->updateFunction(plansys2::Function(f_detected_balls));
-                }
-
-                if(function.name == "at_target_balls"){
-                  std::string f_at_target_balls = "= at_target_balls b1 " + std::to_string(function.value);
-                  problem_expert_->updateFunction(plansys2::Function(f_at_target_balls));
-                }
-
-                if(function.name == "carried_ball"){
-                  std::string f_carried_balls = "= carried_balls r1 " + std::to_string(function.value);
-                  problem_expert_->updateFunction(plansys2::Function(f_carried_balls));
-                }
-              
-                if(function.name == "at_target_balls_goal"){
-                  std::string f_at_target_balls_goal = "= at_target_balls_goal b1 " + std::to_string(function.value);
-                  problem_expert_->updateFunction(plansys2::Function(f_at_target_balls_goal));
-                }
-              }
-            //removeblock
-              state = RESCUE;
-              break;
-            //}
-          
-            //break;
 
           } else {
             RCLCPP_ERROR(get_logger(), "Plan finished with error");
@@ -212,25 +160,54 @@ public:
       }
       break;
 
-      case CHARGE:
+      case Updateknowledge:
       {
-        //problem_expert_->addInstance(plansys2::Instance{"r1", "robot"});
-        problem_expert_->addPredicate(plansys2::Predicate("(battery_low r1)"));
-        problem_expert_->setGoal(plansys2::Goal("(and(battery_full r1))"));
+        std::string f_carried_items = "= carried_items robot_1 " + std::to_string(0);
+            problem_expert_->updateFunction(plansys2::Function(f_carried_items));
 
-        replan = true;
-        charging = true;
-        state = START;
+        std::vector<plansys2::Function> functions = problem_expert_->getFunctions();
+        for (const auto &function : functions)
+        {
+          
+          if(function.name == "battery_level"){
+            std::string function_update = "= battery_level robot_1 " + std::to_string(function.value);
+            problem_expert_->updateFunction(plansys2::Function(function_update));
+          }
+
+          if(function.name == "detected_items"){
+            
+            std::string f_detected_items = "= detected_items blue_balls " + std::to_string(function.value);
+            problem_expert_->updateFunction(plansys2::Function(f_detected_items));
+          }
+
+          if(function.name == "at_target_items"){
+            std::string f_at_target_items = "= at_target_items blue_balls " + std::to_string(function.value);
+            problem_expert_->updateFunction(plansys2::Function(f_at_target_items));
+          }
+
+          /**if(function.name == "carried_items"){
+            std::string f_carried_items = "= carried_items robot_1 " + std::to_string(function.value);
+            problem_expert_->updateFunction(plansys2::Function(f_carried_items));
+          }**/
+          
+          
+        
+          if(function.name == "at_target_items_goal"){
+            std::string f_at_target_items_goal = "= at_target_items_goal blue_balls " + std::to_string(function.value);
+            problem_expert_->updateFunction(plansys2::Function(f_at_target_items_goal));
+          }
+        }
+        re_planning = true;
+        state = RESCUE;
+        break;
       }
       break;
 
       case RESCUE:
       {
-        //problem_expert_->addInstance(plansys2::Instance{"r1", "robot"});
+        //problem_expert_->addInstance(plansys2::Instance{"robot_1", "robot"});
         
-        problem_expert_->setGoal(plansys2::Goal("(and(balls_handeled r1 b1))"));
-
-        charging = false;
+        problem_expert_->setGoal(plansys2::Goal("(and(items_handeled robot_1 blue_balls))"));
         state = START;
       }
       break;
@@ -247,18 +224,18 @@ private:
   rclcpp::Subscription<std_msgs::msg::Int32>::SharedPtr battery_level_sub_;
 
   typedef enum
-    {START, CHARGE, RUN, RESCUE} StateType;
+    {START, CHARGE, RUN, RESCUE, Updateknowledge} StateType;
     StateType state;
 
   bool check = false;
-  bool charging = true;
-  bool replan = false;
+  bool re_planning = false;
+  bool re_plan = false;
 
-  int32_t battery_level = 100;
-  int32_t detected_balls = 5;
-  int32_t at_target_balls_goal = 2;
-  int32_t at_target_balls = 0;
-  int32_t carried_balls = 0;
+  int32_t battery_level = 50;
+  int32_t detected_items = 10;
+  int32_t at_target_items_goal = 5;
+  int32_t at_target_items = 0.0;
+  int32_t carried_items = 0.0;
 
 };
 
