@@ -13,7 +13,7 @@ class ElevatorApproach : public plansys2::ActionExecutorClient
 {
 public:
   ElevatorApproach()
-  : plansys2::ActionExecutorClient("elevator_approach", 2s)
+  : plansys2::ActionExecutorClient("elevator_approach", 1s)
   {
     progress_ = 0.0;
   }

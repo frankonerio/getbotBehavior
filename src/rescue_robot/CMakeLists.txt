@@ -156,6 +156,8 @@ install(TARGETS
 
   destination_navigate_node
   navigation_controller
+
+  obj_detect_start_action_node
  
   ${plugin_libs}
   ARCHIVE DESTINATION lib
