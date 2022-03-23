@@ -276,7 +276,7 @@ def generate_launch_description():
     ld.add_action(stairs_down_cmd)
     ld.add_action(door_open_cmd)
     ld.add_action(door_destination_navigate_cmd)
-    ld.add_action(destination_navigate_node_cmd)
+    ld.add_action(destination_navigate_cmd)
     
     
  

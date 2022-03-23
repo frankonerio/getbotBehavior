@@ -25,7 +25,7 @@ private:
       progress_ += 0.5;
       send_feedback(progress_, "elevator_up running");
     } else {
-      finish(true, 1.0, "elevator_up completed");
+      finish(false, 1.0, "elevator_up not_completed");
 
       progress_ = 0.0;
       std::cout << std::endl;
