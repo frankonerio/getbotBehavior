@@ -123,6 +123,11 @@ switch (state) {
             std::cout << "Could not find plan to reach goal " <<
               parser::pddl::toString(problem_expert_->getGoal()) << std::endl;
             break;
+        }else{
+            std::cout << "--------------------------------------------------------------------" << std::endl;
+            std::cout << "Plan found to reach goal:" << 
+            parser::pddl::toString(problem_expert_->getGoal()) << std::endl;
+            std::cout << "--------------------------------------------------------------------" << std::endl;
         }
 
           // Execute the plan
@@ -159,6 +164,12 @@ switch (state) {
             std::cout << "Could not find plan to reach goal " <<
               parser::pddl::toString(problem_expert_->getGoal()) << std::endl;
             break;
+        }else{
+
+            std::cout << "--------------------------------------------------------------------" << std::endl;
+            std::cout << "Plan found to reach goal:" << 
+            parser::pddl::toString(problem_expert_->getGoal()) << std::endl;
+            std::cout << "--------------------------------------------------------------------" << std::endl;
         }
 
           // Execute the plan
@@ -233,9 +244,9 @@ switch (state) {
                   std::cout << "[" << action_feedback.action << "] finished with error: " <<
                     action_feedback.message_status << std::endl;
 
-                std::cout << "--------------------------------------------------------------------" << std::endl;
-                std::cout << "REMOVING ELEVATOR INSTANCES AND PREDICATES" << std::endl;
-                std::cout << "--------------------------------------------------------------------" << std::endl;
+                //std::cout << "--------------------------------------------------------------------" << std::endl;
+                //std::cout << "REMOVING ELEVATOR INSTANCES AND PREDICATES" << std::endl;
+                //std::cout << "--------------------------------------------------------------------" << std::endl;
 
                 problem_expert_->removePredicate(plansys2::Predicate("(elevator_usable main_elevator p1building)"));
                 problem_expert_->removeInstance(plansys2::Instance{"main_elevator", "elevator"});
@@ -266,17 +277,19 @@ switch (state) {
                 //problem_expert_->removePredicate(plansys2::Predicate("(no_door_inway control_room_1)"));
                 //problem_expert_->removeInstance(plansys2::Instance{"control_room_1", "destination"});
                 
-                }
-            if(currentstate == GOAL_1){
-                state = GOAL_2;
             }
-            if(currentstate == GOAL_2 && laststate == GOAL_1 && !REPLAN){
+
+            if(currentstate == GOAL_1 && state == RUN){
+                state = GOAL_2;
+                break;
+            }
+            if(currentstate == GOAL_2 && laststate == GOAL_1){
                 state = GOAL_3;
             }
-            if(currentstate == GOAL_3 && laststate == GOAL_2 && !REPLAN){
+            if(currentstate == GOAL_3 && laststate == GOAL_2){
                 state = GOAL_4;
             }
-            if(currentstate == GOAL_4 && laststate == GOAL_3 && !REPLAN){
+            if(currentstate == GOAL_4 && laststate == GOAL_3 && state != REPLAN){
                 state = IDLE;
             }
             break;
@@ -295,7 +308,7 @@ switch (state) {
         auto plan = planner_client_->getPlan(domain, problem);
 
         std::cout << "------------------------------------------------------------------------" << std::endl;
-        std::cout << "GENERATING PLAN" << std::endl;
+        std::cout << "REPLANNING" << std::endl;
         std::cout << "-------------------------------------------------------------------------" << std::endl;
         
 
@@ -348,7 +361,7 @@ int main(int argc, char ** argv)
 
     node->init();
 
-    rclcpp::Rate rate(1);
+    rclcpp::Rate rate(2);
     while (rclcpp::ok()) {
     node->step();
 
