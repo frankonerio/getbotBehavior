@@ -21,11 +21,11 @@ public:
 private:
   void do_work()
   {
-    if (progress_ < 1.0) {
-      progress_ += 0.5;
+    if (progress_ < 0.05) {
+      progress_ += 0.05;
       send_feedback(progress_, "elevator_up running");
     } else {
-      finish(false, 1.0, "elevator_up not_completed");
+      finish(false, 0.1, "elevator_up not_completed");
 
       progress_ = 0.0;
       std::cout << std::endl;
