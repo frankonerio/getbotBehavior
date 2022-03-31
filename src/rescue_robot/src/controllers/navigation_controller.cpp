@@ -30,6 +30,8 @@ NavigationController()
 
 void init()
 {
+    //client API's
+
     domain_expert_ = std::make_shared<plansys2::DomainExpertClient>();
     planner_client_ = std::make_shared<plansys2::PlannerClient>();
     problem_expert_ = std::make_shared<plansys2::ProblemExpertClient>();
@@ -89,6 +91,33 @@ switch (state) {
             parser::pddl::toString(problem_expert_->getGoal()) << std::endl;
             std::cout << "--------------------------------------------------------------------" << std::endl;
         }
+
+
+        auto predicates = problem_expert_->getPredicates();
+        for (const auto &predicate: predicates){
+            if(predicate.name == "no_door_inway"){
+                auto params = predicate.parameters;
+                for(const auto &param : params){
+                    parameters.push_back(param.name);
+                }
+                if(parameters.size() == 2){
+                    std::string target = predicate.name + " " + parameters.at(0) + " " + parameters.at(1);
+                    std::cout << target << std::endl;
+                }else if(parameters.size() == 1){
+                    std::string target = predicate.name + " " + parameters.at(0);
+                    std::cout << target << std::endl;
+                }else{
+                    break;
+                }
+            }
+            
+        }
+
+        //auto instances = problem_expert_->getInstances();
+        //for (const auto &instance : instances)
+        //{
+           // std::cout << instance.name << std::endl;
+        //}
 
           // Execute the plan
         if (executor_client_->start_plan_execution(plan.value())) {
@@ -234,7 +263,6 @@ switch (state) {
         std::cout << "EXECUTING GENERATED PLAN" << std::endl;
         std::cout << "-------------------------------------------------------------------------" << std::endl;
 
-
         auto feedback = executor_client_->getFeedBack();
         for (const auto &action_feedback : feedback.action_execution_status){
 
@@ -244,10 +272,29 @@ switch (state) {
                   std::cout << "[" << action_feedback.action << "] finished with error: " <<
                     action_feedback.message_status << std::endl;
 
-                //std::cout << "--------------------------------------------------------------------" << std::endl;
-                //std::cout << "REMOVING ELEVATOR INSTANCES AND PREDICATES" << std::endl;
-                //std::cout << "--------------------------------------------------------------------" << std::endl;
-
+                //To do: perform string search, get all instances and predicates and remove all with matching
+                //action.feeback names.
+    
+                /**auto predicates = problem_expert_->getPredicates();
+                for (const auto &predicate: predicates){
+                    if(predicate.name == "no_door_inway"){
+                        auto params = predicate.parameters;
+                        for(const auto &param : params){
+                            parameters.push_back(param.name);
+                        }
+                        if(parameters.size() == 2){
+                            std::string target = predicate.name + " " + parameters.at(0) + " " + parameters.at(1);
+                            std::cout << target << std::endl;
+                        }else if(parameters.size() == 1){
+                            std::string target = predicate.name + " " + parameters.at(0);
+                            std::cout << target << std::endl;
+                        }else{
+                            break;
+                        }
+                    }
+                    
+                }**/
+                
                 problem_expert_->removePredicate(plansys2::Predicate("(elevator_usable main_elevator p1building)"));
                 problem_expert_->removeInstance(plansys2::Instance{"main_elevator", "elevator"});
                 
@@ -299,10 +346,7 @@ switch (state) {
 
     case REPLAN:
     {
-        std::cout << "------------------------------------------------------------------------" << std::endl;
-        std::cout << "REMOVING ELEVATOR INSTANCES AND PREDICATES" << std::endl;
-        std::cout << "-------------------------------------------------------------------------" << std::endl;
-
+        
         auto domain = domain_expert_->getDomain();
         auto problem = problem_expert_->getProblem();
         auto plan = planner_client_->getPlan(domain, problem);
@@ -352,6 +396,8 @@ private:
     std::shared_ptr<plansys2::PlannerClient> planner_client_;
     std::shared_ptr<plansys2::ProblemExpertClient> problem_expert_;
     std::shared_ptr<plansys2::ExecutorClient> executor_client_;
+
+    std::vector <std::string> parameters;
 };
 
 int main(int argc, char ** argv)
@@ -361,7 +407,7 @@ int main(int argc, char ** argv)
 
     node->init();
 
-    rclcpp::Rate rate(2);
+    rclcpp::Rate rate(1);
     while (rclcpp::ok()) {
     node->step();
 
