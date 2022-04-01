@@ -38,13 +38,3 @@ set function (= (battery_level robot_4) 10)
 set goal (and (mapping robot_4 P4Building) (obj_detecting robot_4 P4Building))
 get plan
 
-
-problem_expert_->addInstance(plansys2::Instance{"p4Building", "world"});
-      problem_expert_->addInstance(plansys2::Instance{"robot_4", "robot"});
- 
-
-    //problem_expert_->addPredicate(plansys2::Predicate("(piece_not_used steering_wheel_3)"));
-
-      problem_expert_->addFunction(plansys2::Function("= battery_level robot_4 10"));
-
-      problem_expert_->setGoal(plansys2::Goal("(and(mapping robot_4 P4Building) (obj_detecting robot_4 P4Building)"));

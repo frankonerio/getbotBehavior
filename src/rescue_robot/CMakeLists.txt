@@ -57,15 +57,15 @@ ament_target_dependencies(item_victim_grab_action_node ${dependencies})
 add_executable(victim_rescue_action_node src/object_handling/victim_rescue_action_node.cpp)
 ament_target_dependencies(victim_rescue_action_node ${dependencies})
 
+add_executable(obj_approach_action_node src/object_handling/obj_approach_action_node.cpp)
+ament_target_dependencies(obj_approach_action_node ${dependencies})
+
+add_executable(target_approach_action_node src/object_handling/target_approach_action_node.cpp)
+ament_target_dependencies(target_approach_action_node ${dependencies})
+
 ################################################################################
 #                         NAVIGATION ACTION NODES                              #
 ################################################################################
-
-add_executable(obj_approach_action_node src/navigation/obj_approach_action_node.cpp)
-ament_target_dependencies(obj_approach_action_node ${dependencies})
-
-add_executable(target_approach_action_node src/navigation/target_approach_action_node.cpp)
-ament_target_dependencies(target_approach_action_node ${dependencies})
 
 add_executable(elevator_approach_action_node src/navigation/elevator_approach_action_node.cpp)
 ament_target_dependencies(elevator_approach_action_node ${dependencies})
@@ -120,6 +120,10 @@ ament_target_dependencies(controller_node ${dependencies})
 add_executable(navigation_controller src/controllers/navigation_controller.cpp)
 ament_target_dependencies(navigation_controller ${dependencies})
 
+add_executable(object_handling_controller src/controllers/object_handling_controller.cpp)
+ament_target_dependencies(object_handling_controller ${dependencies})
+
+
 
 install(DIRECTORY launch pddl config behavior_trees_xml params DESTINATION share/${PROJECT_NAME})
 
@@ -158,6 +162,7 @@ install(TARGETS
   navigation_controller
 
   obj_detect_start_action_node
+  object_handling_controller
  
   ${plugin_libs}
   ARCHIVE DESTINATION lib

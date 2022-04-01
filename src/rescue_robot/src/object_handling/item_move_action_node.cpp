@@ -21,7 +21,7 @@ public:
 private:
   void do_work()
   {
-    if (progress_ < 2.0) {
+    if (progress_ < 1.0) {
       progress_ += 0.5;
       send_feedback(progress_, "item_move running");
     } else {

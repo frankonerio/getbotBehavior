@@ -27,7 +27,7 @@ class BatteryPub : public rclcpp::Node
     {
       auto message = std_msgs::msg::Int32();
       //level -= 20;
-      message.data = 12.0;
+      message.data = 11;
       RCLCPP_INFO(this->get_logger(), "Publishing: '%d'", message.data);
       Battery_Pub->publish(message);
     }
