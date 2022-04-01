@@ -13,7 +13,7 @@ class ItemVictimDrop: public plansys2::ActionExecutorClient
 {
 public:
   ItemVictimDrop()
-  : plansys2::ActionExecutorClient("item_victim_dropped", 2s)
+  : plansys2::ActionExecutorClient("item_victim_drop", 2s)
   {
     progress_ = 0.0;
   }
@@ -21,7 +21,7 @@ public:
 private:
   void do_work()
   {
-    if (progress_ < 2.0) {
+    if (progress_ < 1.0) {
       progress_ += 0.5;
       send_feedback(progress_, "item_victim_drop running");
     } else {
@@ -44,7 +44,7 @@ int main(int argc, char ** argv)
   rclcpp::init(argc, argv);
   auto node = std::make_shared<ItemVictimDrop>();
 
-  node->set_parameter(rclcpp::Parameter("action_name", "item_victim_dropped"));
+  node->set_parameter(rclcpp::Parameter("action_name", "item_victim_drop"));
   node->trigger_transition(lifecycle_msgs::msg::Transition::TRANSITION_CONFIGURE);
 
   rclcpp::spin(node->get_node_base_interface());

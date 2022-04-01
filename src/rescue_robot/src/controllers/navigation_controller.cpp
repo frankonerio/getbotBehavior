@@ -24,7 +24,7 @@ class NavigationController : public rclcpp::Node
 {
 public:
 NavigationController()
-: rclcpp::Node("navigation_controller"), state(GOAL_4)
+: rclcpp::Node("navigation_controller"), state(GOAL_1)
 {
 }
 
@@ -91,33 +91,6 @@ switch (state) {
             parser::pddl::toString(problem_expert_->getGoal()) << std::endl;
             std::cout << "--------------------------------------------------------------------" << std::endl;
         }
-
-
-        auto predicates = problem_expert_->getPredicates();
-        for (const auto &predicate: predicates){
-            if(predicate.name == "no_door_inway"){
-                auto params = predicate.parameters;
-                for(const auto &param : params){
-                    parameters.push_back(param.name);
-                }
-                if(parameters.size() == 2){
-                    std::string target = predicate.name + " " + parameters.at(0) + " " + parameters.at(1);
-                    std::cout << target << std::endl;
-                }else if(parameters.size() == 1){
-                    std::string target = predicate.name + " " + parameters.at(0);
-                    std::cout << target << std::endl;
-                }else{
-                    break;
-                }
-            }
-            
-        }
-
-        //auto instances = problem_expert_->getInstances();
-        //for (const auto &instance : instances)
-        //{
-           // std::cout << instance.name << std::endl;
-        //}
 
           // Execute the plan
         if (executor_client_->start_plan_execution(plan.value())) {
@@ -270,7 +243,7 @@ switch (state) {
                 << " " << action_feedback.completion * 100.0 << "%]");
             if (action_feedback.status == plansys2_msgs::msg::ActionExecutionInfo::FAILED) {
                   std::cout << "[" << action_feedback.action << "] finished with error: " <<
-                    action_feedback.message_status << std::endl;
+                    action_feedback.arguments[2] << std::endl;
 
                 //To do: perform string search, get all instances and predicates and remove all with matching
                 //action.feeback names.
@@ -294,13 +267,23 @@ switch (state) {
                     }
                     
                 }**/
+
+                // Updating knowledge base by removing instances linked to failed action.
+
+                    std::cout << "--------------------------------------------------------------------" << std::endl;
+                    std::cout << "UPDATING KNOWLEDGE BASE" << std::endl;
+                    std::cout << "--------------------------------------------------------------------" << std::endl;
+
+                    auto instances = problem_expert_->getInstances();
+                    for (const auto &instance : instances){
+                        if(instance.name == action_feedback.arguments[2]){
+                            std::string failed_action = instance.name + ", " + instance.type;
+                            problem_expert_->removeInstance(plansys2::Instance{failed_action});
+                        }
+                        
+                    }
+
                 
-                problem_expert_->removePredicate(plansys2::Predicate("(elevator_usable main_elevator p1building)"));
-                problem_expert_->removeInstance(plansys2::Instance{"main_elevator", "elevator"});
-                
-                //cancel plan execution
-                
-                //problem_expert_->clearGoal();
                 executor_client_->cancel_plan_execution();
 
                 state = REPLAN;
@@ -318,12 +301,6 @@ switch (state) {
                 std::cout << "UPDATING KNOWLEDGE BASE" << std::endl;
                 std::cout << "--------------------------------------------------------------------" << std::endl;
                 problem_expert_->clearKnowledge();
-                //problem_expert_->removeFunction(plansys2::Function("= destination_floor control_room_1 p1building 6"));
-                //problem_expert_->removeFunction(plansys2::Function("= current_floor robot_1 p1building 2"));
-                //problem_expert_->removePredicate(plansys2::Predicate("(stairs_usable main_stairs p1building)"));
-                //problem_expert_->removePredicate(plansys2::Predicate("(no_door_inway control_room_1)"));
-                //problem_expert_->removeInstance(plansys2::Instance{"control_room_1", "destination"});
-                
             }
 
             if(currentstate == GOAL_1 && state == RUN){
@@ -377,7 +354,7 @@ switch (state) {
 
     case IDLE:
     {
-
+        std::cout << "Idle Mood" << std::endl;
     }
     break;
     default:
@@ -397,7 +374,7 @@ private:
     std::shared_ptr<plansys2::ProblemExpertClient> problem_expert_;
     std::shared_ptr<plansys2::ExecutorClient> executor_client_;
 
-    std::vector <std::string> parameters;
+    //std::vector <std::string> parameters;
 };
 
 int main(int argc, char ** argv)
@@ -407,7 +384,7 @@ int main(int argc, char ** argv)
 
     node->init();
 
-    rclcpp::Rate rate(1);
+    rclcpp::Rate rate(10);
     while (rclcpp::ok()) {
     node->step();
 
